@@ -1,11 +1,9 @@
 package com.jason.weatherchallenge.service;
 
-import com.jason.weatherchallenge.model.ResponseDto;
-import com.jason.weatherchallenge.model.dto.Day;
+import com.jason.weatherchallenge.model.dto.ResponseDto;
 import com.jason.weatherchallenge.model.dto.ForecastDay;
-import com.jason.weatherchallenge.model.dto.WeatherData;
-import com.jason.weatherchallenge.model.dto.WeatherResponseDto;
-import com.jason.weatherchallenge.model.dao.Weather;
+import com.jason.weatherchallenge.model.dto.WeatherDto;
+import com.jason.weatherchallenge.model.persistence.Weather;
 import com.jason.weatherchallenge.repository.WeatherRepository;
 import com.jason.weatherchallenge.webclient.WeatherApiRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,16 +31,16 @@ public class WeatherService {
     private final WeatherApiRepository weatherApiRepository;
 
     public ResponseEntity<ResponseDto> saveWeatherForecast(String city, int days) {
-        WeatherData weatherData;
+        WeatherDto weatherDto;
         try {
-            weatherData = weatherApiRepository.getWeatherData(city, days).block();
+            weatherDto = weatherApiRepository.getWeatherData(city, days).block();
         }catch (WebClientResponseException we) {
             return createErrorResponse(we);
         }
 
-        if(weatherData != null) {
-            List<ForecastDay> forecastDayList = weatherData.getForecast().getForecastDays();
-            ResponseEntity<ResponseDto> response = persistForecast(forecastDayList, weatherData.getLocation().getName());
+        if(weatherDto != null) {
+            List<ForecastDay> forecastDayList = weatherDto.getForecast().getForecastDays();
+            ResponseEntity<ResponseDto> response = persistForecast(forecastDayList, weatherDto.getLocation().getName());
             if (response != null) {
                 return response;
             }

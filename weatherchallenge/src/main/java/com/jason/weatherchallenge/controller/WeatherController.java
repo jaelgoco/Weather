@@ -1,7 +1,7 @@
 package com.jason.weatherchallenge.controller;
 
-import com.jason.weatherchallenge.model.ResponseDto;
-import com.jason.weatherchallenge.model.dao.Weather;
+import com.jason.weatherchallenge.model.dto.ResponseDto;
+import com.jason.weatherchallenge.model.persistence.Weather;
 import com.jason.weatherchallenge.service.WeatherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

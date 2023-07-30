@@ -1,25 +1,23 @@
 package com.jason.weatherchallenge.service.util;
 
-import com.jason.weatherchallenge.model.ResponseDto;
-import com.jason.weatherchallenge.model.dao.Weather;
-import com.jason.weatherchallenge.model.dto.*;
-import org.junit.jupiter.api.Disabled;
+import com.jason.weatherchallenge.model.dto.Condition;
+import com.jason.weatherchallenge.model.dto.Day;
+import com.jason.weatherchallenge.model.dto.ForecastDay;
+import com.jason.weatherchallenge.model.dto.ResponseDto;
+import com.jason.weatherchallenge.model.persistence.Weather;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 
 import static com.jason.weatherchallenge.service.util.ServiceUtil.createErrorResponse;
 import static com.jason.weatherchallenge.service.util.ServiceUtil.weatherBuilder;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static reactor.core.publisher.Mono.when;
 
 @ExtendWith(MockitoExtension.class)
 class ServiceUtilTest {
@@ -47,16 +45,10 @@ class ServiceUtilTest {
         assertEquals(expected, weatherBuilder(forecastDay, city));
     }
 
-    @Disabled
     @Test
-    void createErrorResponse_OK() {
-        WeatherErrorDto error = new WeatherErrorDto("1005", "Incorrect");
-        WeatherResponseDto response = new WeatherResponseDto(error);
-
-        //WebClientResponseException we = new WebClientResponseException(400, "", new HttpHeaders(), "{\"code\": 1002,\"message\": \"API key not provided\"}".getBytes(), StandardCharsets.UTF_8);
-
+    void createErrorResponseTest() {
         ResponseEntity<ResponseDto> expected = new ResponseEntity<>(new ResponseDto(null, "Incorrect"), BAD_REQUEST);
 
-        assertEquals(expected, createErrorResponse(we));
+        assertEquals(expected.getStatusCode(), createErrorResponse(we).getStatusCode());
     }
 }

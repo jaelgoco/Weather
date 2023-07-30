@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class WeatherData {
+public class WeatherDto {
     @JsonProperty("forecast")
     Forecast forecast;
     @JsonProperty("location")

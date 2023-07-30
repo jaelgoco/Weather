@@ -1,7 +1,7 @@
-package com.jason.weatherchallenge.model;
+package com.jason.weatherchallenge.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.jason.weatherchallenge.model.dao.Weather;
+import com.jason.weatherchallenge.model.persistence.Weather;
 import lombok.AllArgsConstructor;
 
 import java.util.List;

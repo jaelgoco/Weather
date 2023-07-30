@@ -1,7 +1,7 @@
 package com.jason.weatherchallenge.service.util;
 
-import com.jason.weatherchallenge.model.ResponseDto;
-import com.jason.weatherchallenge.model.dao.Weather;
+import com.jason.weatherchallenge.model.dto.ResponseDto;
+import com.jason.weatherchallenge.model.persistence.Weather;
 import com.jason.weatherchallenge.model.dto.Day;
 import com.jason.weatherchallenge.model.dto.ForecastDay;
 import com.jason.weatherchallenge.model.dto.WeatherResponseDto;

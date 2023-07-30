@@ -1,7 +1,7 @@
 package com.jason.weatherchallenge.service;
 
-import com.jason.weatherchallenge.model.ResponseDto;
-import com.jason.weatherchallenge.model.dao.Weather;
+import com.jason.weatherchallenge.model.dto.ResponseDto;
+import com.jason.weatherchallenge.model.persistence.Weather;
 import com.jason.weatherchallenge.model.dto.*;
 import com.jason.weatherchallenge.repository.WeatherRepository;
 import com.jason.weatherchallenge.webclient.WeatherApiRepository;
@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Mono;
@@ -19,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static java.time.temporal.ChronoUnit.DAYS;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,13 +33,17 @@ class WeatherServiceTest {
     @InjectMocks
     WeatherService weatherService;
 
+    String city = "madrid";
+    int days = 2;
+    String today = LocalDate.now().toString();
+
     @Test
     void saveWeatherForecastTest() {
         String city = "madrid";
         int days = 2;
         ResponseEntity<ResponseDto> expected = new ResponseEntity<>(new ResponseDto(null, null), CREATED);
 
-        Mockito.when(weatherApiRepository.getWeatherData(city,days)).thenReturn(Mono.just(createWeatherData()));
+        when(weatherApiRepository.getWeatherData(city,days)).thenReturn(Mono.just(createWeatherData()));
 
         ResponseEntity<ResponseDto> result = weatherService.saveWeatherForecast(city, days);
         assertEquals(expected.getStatusCode(), result.getStatusCode());
@@ -51,7 +55,7 @@ class WeatherServiceTest {
         int days = 2;
         ResponseEntity<ResponseDto> expected = new ResponseEntity<>(new ResponseDto(null, "Failed to save weather information"), BAD_REQUEST);
 
-        Mockito.when(weatherApiRepository.getWeatherData(city,days)).thenReturn(Mono.empty());
+        when(weatherApiRepository.getWeatherData(city,days)).thenReturn(Mono.empty());
 
         ResponseEntity<ResponseDto> result = weatherService.saveWeatherForecast(city, days);
         assertEquals(expected.getStatusCode(), result.getStatusCode());
@@ -63,27 +67,22 @@ class WeatherServiceTest {
 
     @Test
     void retrieveWeatherForecastByDateAndCityTest() {
-        String date = LocalDate.now().toString();
-        String city = "madrid";
         Weather expected = new Weather(1L, LocalDate.now().toString(), "madrid", 10.8, 15.8, 0, 50.3, "Sunny");
 
-        Mockito.when(weatherRepository.findByDateAndCity(date,city)).thenReturn(createWeather());
+        when(weatherRepository.findByDateAndCity(today, city)).thenReturn(createWeather());
 
-        assertEquals(expected, weatherService.retrieveWeatherForecastByDateAndCity(date, city));
+        assertEquals(expected, weatherService.retrieveWeatherForecastByDateAndCity(today, city));
     }
 
     @Test
     void retrieveWeatherForecastByDaysAndCity() {
-        String date = LocalDate.now().toString();
-        String city = "madrid";
-        int days = 2;
         List<Weather> weathers = new ArrayList<>();
         weathers.add(createWeather());
         weathers.add(createWeather());
 
         ResponseEntity<ResponseDto> expected = new ResponseEntity<>(new ResponseDto(weathers, null), OK);
 
-        Mockito.when(weatherRepository.findByDateAndCity(date,city)).thenReturn(createWeather());
+        when(weatherRepository.findByDateAndCity(today, city)).thenReturn(createWeather());
 
         ResponseEntity<ResponseDto> result = weatherService.retrieveWeatherForecastByDaysAndCity(city, days);
 
@@ -92,9 +91,6 @@ class WeatherServiceTest {
 
     @Test
     void retrieveAllWeatherForecastByDays() {
-        String date = LocalDate.now().toString();
-        String city = "madrid";
-        int days = 2;
         List<List<Weather>> expected = new ArrayList<>();
         List<Weather> weathers1 = new ArrayList<>();
         weathers1.add(createWeather());
@@ -109,7 +105,7 @@ class WeatherServiceTest {
         testdata.add(createWeather());
         testdata.add(createWeather());
 
-        Mockito.when(weatherRepository.findAllByDateOrderByCity(date)).thenReturn(testdata);
+        when(weatherRepository.findAllByDateOrderByCity(today)).thenReturn(testdata);
 
         List<List<Weather>> result = weatherService.retrieveAllWeatherForecastByDays(days);
 
@@ -117,7 +113,7 @@ class WeatherServiceTest {
         //assertEquals(expected.get(1).size(), result.get(1).size());
     }
 
-    private WeatherData createWeatherData() {
+    private WeatherDto createWeatherData() {
         Condition condition = new Condition("Sunny");
         Day day = new Day(10.2, 10.3, 10.4, 20, condition);
         ForecastDay forecastDay1 = new ForecastDay(LocalDate.now().toString(), day);
@@ -127,7 +123,7 @@ class WeatherServiceTest {
         forecastDayList.add(forecastDay2);
         Forecast forecast = new Forecast(forecastDayList);
         Location location = new Location("madrid");
-        return new WeatherData(forecast, location);
+        return new WeatherDto(forecast, location);
     }
 
     private Weather createWeather() {
