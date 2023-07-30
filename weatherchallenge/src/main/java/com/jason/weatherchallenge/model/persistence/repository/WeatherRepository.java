@@ -1,4 +1,4 @@
-package com.jason.weatherchallenge.repository;
+package com.jason.weatherchallenge.model.persistence.repository;
 
 import com.jason.weatherchallenge.model.persistence.Weather;
 import org.springframework.data.jpa.repository.JpaRepository;

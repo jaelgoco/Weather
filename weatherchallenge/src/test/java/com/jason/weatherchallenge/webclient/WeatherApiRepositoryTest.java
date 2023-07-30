@@ -1,6 +1,7 @@
 package com.jason.weatherchallenge.webclient;
 
 import com.jason.weatherchallenge.model.dto.*;
+import com.jason.weatherchallenge.webclient.repository.WeatherApiRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

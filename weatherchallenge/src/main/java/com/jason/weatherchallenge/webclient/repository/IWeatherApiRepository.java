@@ -1,4 +1,4 @@
-package com.jason.weatherchallenge.webclient;
+package com.jason.weatherchallenge.webclient.repository;
 
 import com.jason.weatherchallenge.model.dto.WeatherDto;
 import reactor.core.publisher.Mono;
